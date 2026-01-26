@@ -74,6 +74,12 @@ Function GetColumnValuesAsString(ws As Worksheet, _
     GetColumnValuesAsString = result
 End Function
 
+'######### GetTimestamp
+Function GetTimestamp() As String
+    ' yyyy-mm-dd-HH-MM-ss 形式で現在時刻を返す
+    GetTimestamp = Format(Now, "yyyy-mm-dd-HH-MM-ss")
+End Function
+
 '######### GetValueByID_Hash
 '========================================
 ' ハッシュでIDから値取得（ID列・取得列は自動検索）
