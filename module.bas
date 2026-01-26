@@ -92,7 +92,7 @@ Function GetValueByID_Hash(ws As Worksheet, _
     GetValueByID_Hash = "" ' 見出しが見つからない
     
     ' ID列と取得列の列番号を取得
-    Dim idCol As Long: idCol         = GetColumnByHeader(ws, idHeader, headerRow)
+    Dim idCol     As Long: idCol     = GetColumnByHeader(ws, idHeader, headerRow)
     Dim targetCol As Long: targetCol = GetColumnByHeader(ws, targetHeader, headerRow)
     If idCol = 0 Or targetCol = 0 Then Exit Function    
 
