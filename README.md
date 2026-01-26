@@ -1,7 +1,7 @@
 # VBA
 
 ```sh
-curl -O URL
+curl -O https://raw.githubusercontent.com/YumaYX/vba-mod-tools/refs/heads/main/module.bas
 ```
 
 ## dev
