@@ -1,3 +1,114 @@
+'######### CreateAndDisplayTextMail
+'========================================
+' 新規メール作成関数（返り値なし）
+'----------------------------------------
+' 引数:
+'   toAddr  - 宛先 (カンマ区切りでも可)
+'   ccAddr  - CC (省略可)
+'   bccAddr - BCC (省略可)
+'   subjTxt - タイトル
+'   bodyTxt - 本文
+'========================================
+Sub CreateAndDisplayTextMail(toAddr As String, _
+                             Optional ccAddr As String = "", _
+                             Optional bccAddr As String = "", _
+                             Optional subjTxt As String = "", _
+                             Optional bodyTxt As String = "")
+    On Error Resume Next
+
+    ' Outlook アプリ生成
+    Dim olApp As Object: Set olApp = GetObject(, "Outlook.Application")
+    If olApp Is Nothing Then Set olApp = CreateObject("Outlook.Application")
+
+    On Error GoTo 0
+
+    ' 新規メール作成
+    Dim mail As Object: Set mail = olApp.CreateItem(0) ' 0 = olMailItem
+    ' プロパティ設定
+    With mail
+        .To = toAddr
+        .CC = ccAddr
+        .BCC = bccAddr
+        .BodyFormat = 1 ' 1 = olFormatPlain (テキスト形式)
+        .Subject = subjTxt
+        .Body = bodyTxt
+        .Display  ' 作成したメールを表示
+    End With
+End Sub
+
+'######### GetColumnByHeader
+'========================================
+' 見出し名から列番号を探す
+' ws      : 対象ワークシート
+' header  : 探したい見出し名
+' rowNum  : 見出しがある行番号（通常1行目）
+' 戻り値  : 列番号（見つからなければ0）
+'========================================
+Function GetColumnByHeader(ws As Worksheet, header As String, Optional rowNum As Long = 1) As Long
+    Dim lastCol As Long: lastCol = ws.Cells(rowNum, ws.Columns.Count).End(xlToLeft).Column
+    Dim c As Long: For c = 1 To lastCol
+        GetColumnByHeader = c
+        If ws.Cells(rowNum, c).Value = header Then Exit Function
+    Next c
+    GetColumnByHeader = 0 ' 見つからなければ0
+End Function
+
+'######### GetColumnValuesAsString
+'========================================
+' 指定列の値を文字列で返す
+' ws        : 対象ワークシート
+' colNum    : 取得する列番号（省略時1列目）
+' delimiter : 値をつなぐ区切り（省略時 vbCrLf で改行）
+' 戻り値    : 列の値をつなげた文字列
+'========================================
+Function GetColumnValuesAsString(ws As Worksheet, _
+                                 Optional colNum As Long = 1, _
+                                 Optional delimiter As String = vbCrLf) As String
+    ' 最終行を取得
+    Dim lastRow As Long: lastRow = ws.Cells(ws.Rows.Count, colNum).End(xlUp).Row
+    Dim result As String: result = ""
+
+    Dim r As Long: For r = 1 To lastRow
+        result = result & ws.Cells(r, colNum).Value & delimiter
+    Next r
+    GetColumnValuesAsString = result
+End Function
+
+'######### GetValueByID_Hash
+'========================================
+' ハッシュでIDから値取得（ID列・取得列は自動検索）
+' ws           : 対象ワークシート
+' idHeader     : ID列の見出し名
+' idValue      : 検索するID
+' targetHeader : 取得したい列の見出し名
+' headerRow    : 見出し行番号（省略可、通常1）
+' 戻り値       : 該当セルの値（見つからなければ""）
+'========================================
+Function GetValueByID_Hash(ws As Worksheet, _
+                           idHeader As String, _
+                           idValue As Variant, _
+                           targetHeader As String, _
+                           Optional headerRow As Long = 1) As Variant
+    GetValueByID_Hash = "" ' 見出しが見つからない
+    
+    ' ID列と取得列の列番号を取得
+    Dim idCol As Long: idCol         = GetColumnByHeader(ws, idHeader, headerRow)
+    Dim targetCol As Long: targetCol = GetColumnByHeader(ws, targetHeader, headerRow)
+    If idCol = 0 Or targetCol = 0 Then Exit Function    
+
+    ' 最終行
+    Dim lastRow As Long: lastRow = ws.Cells(ws.Rows.Count, idCol).End(xlUp).Row
+    ' Dictionary作成
+    Dim dict As Object: Set dict = CreateObject("Scripting.Dictionary")
+
+    Dim r As Long: For r = headerRow + 1 To lastRow
+        If Not dict.Exists(ws.Cells(r, idCol).Value) Then dict(ws.Cells(r, idCol).Value) = ws.Cells(r, targetCol).Value
+    Next r
+
+    ' IDで値取得
+    If dict.Exists(idValue) Then GetValueByID_Hash = dict(idValue)
+End Function
+
 '######### Hello
 Function Hello() As String
     hello = "hello"
