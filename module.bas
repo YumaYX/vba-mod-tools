@@ -170,3 +170,30 @@ Function Hello() As String
     hello = "hello"
 End Function
 
+'######### LastUsedRow
+Function LastUsedRow(ws As Worksheet, Optional col As Long = 1) As Long
+    With ws
+        If Application.WorksheetFunction.CountA(.Columns(col)) = 0 Then
+            LastUsedRow = 0
+        Else
+            LastUsedRow = .Cells(.Rows.Count, col).End(xlUp).Row
+        End If
+    End With
+End Function
+
+'######### OpenExcel
+'# Dim wb As Workbook: Set wb = OpenExcel()
+
+Function OpenExcel() As Workbook
+    Dim filename As Variant
+    filename = Application.GetOpenFilename( _
+        FileFilter:="Excelファイル (*.xls*),*.xls*,CSVファイル (*.csv),*.csv")
+
+    If filename = False Then
+        Set OpenExcel = Nothing
+        Exit Function
+    End If
+
+    Set OpenExcel = Workbooks.Open(filename)
+End Function
+
