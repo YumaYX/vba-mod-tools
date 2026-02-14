@@ -1,4 +1,4 @@
-# VBA
+# vba-mod-tools
 
 ```sh
 curl -O https://raw.githubusercontent.com/YumaYX/vba-mod-tools/refs/heads/main/module.bas
