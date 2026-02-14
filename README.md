@@ -1,10 +1,14 @@
 # vba-mod-tools
 
+Reusable procedures and functions for Excel automation.
+
+## how to use
+
 ```sh
-curl -O https://raw.githubusercontent.com/YumaYX/vba-mod-tools/refs/heads/main/module.bas
+curl -o module.bas.txt https://raw.githubusercontent.com/YumaYX/vba-mod-tools/refs/heads/main/module.bas
 ```
 
-## dev
+## for development
 
 ### split
 
@@ -17,3 +21,4 @@ cargo run -- split module.bas
 ```sh
 cargo run -- concat
 ```
+
