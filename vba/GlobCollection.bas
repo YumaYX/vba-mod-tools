@@ -16,4 +16,3 @@ Function GlobCollection(folderPath As String, pattern As String) As Collection
 
     Set GlobCollection = col
 End Function
-
